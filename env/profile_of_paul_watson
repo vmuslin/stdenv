@@ -1,0 +1,83 @@
+
+export VISUAL='vi'
+export EXINIT='set number ignorecase tabstop=4 expandtab directory=/tmp shiftwidth=4'
+
+export HISTFILE='~/.sh_history'
+export HISTSIZE=512
+
+export ENV=.kshrc
+
+export MANPATH=/usr/man:$MANPATH
+
+#	Remove any other versions of Python that might be in the path
+#	before that from the vendor.
+#
+#- export PATH=$(print ${PATH}|sed 's#:/cygdrive/c/Python23##')
+
+#   Fix the directory separator for the AB_ variables.
+#   If AB_HOME is not fixed, then cd will not change the PWD variable.
+#
+export AB_HOME=$(echo ${AB_HOME}|sed -e 's/\\/\//g')
+export AB_WORK_DIR=$(echo ${AB_WORK_DIR}|sed -e 's/\\/\//g')
+
+export AB_AIR_ROOT=$(echo ${AB_AIR_ROOT}|sed -e 's/\\/\//g')
+export AB_IS_INTERNATIONAL=true
+
+#- export AB_AIR_ROOT=C:/src/projects/faisaleme/descon
+export AB_IS_INTERNATIONAL=false
+
+for s in \
+    AB_HOME ${AB_HOME} \
+    AB_WORK_DIR ${AB_WORK_DIR} \
+    AB_AIR_ROOT ${AB_AIR_ROOT} \
+    AB_IS_INTERNATIONAL ${AB_IS_INTERNATIONAL}
+do
+#    print $s
+done
+unset s
+
+if [ -s "$MAIL" ]
+then
+	echo "$MAILMSG"
+fi
+
+if [[ -t 0 || -t 1 ]]
+then
+	bold="$(tput smso)"
+	unbold="$(tput rmso)"
+
+	user="$(id -u -n)"
+	host="$(uname -n)"
+
+	if [[ "${user}" = "root" ]]
+	then	prompt="#"
+	else	prompt="$"
+	fi
+
+	ptime="\$(date '+%Y-%m-%dT%X')"
+	export ptime
+
+export PS1="\$(date) ${user} [ ${bold}${host}${unbold}:\${PWD} ] !
+${prompt} "
+export PS1="${user} [ ${bold}${host}${unbold}:\${PWD} ] !
+${prompt} "
+
+	unset bold unbold user host
+fi
+
+if [[ ${TERM} = "xterm" ]] ; then
+	stty erase ^?;
+#else
+#	stty erase ?
+fi
+
+alias dir='ls -sal'
+alias od='/usr/bin/od -Ax -t x1'
+alias plus2='sqlplus pwatson/pwatson@train'
+
+export PATH=${PATH}:~/bin
+
+function dp
+{
+    export PWD=$(pwd)
+}

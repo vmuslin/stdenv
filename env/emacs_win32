@@ -1,0 +1,234 @@
+;
+; Victor Muslin's emacs initialization file
+;
+;
+; Functions
+;
+; scroll down one line
+;
+(defun scroll-down-one ()
+  (interactive)
+  (scroll-up 1))
+;
+; scroll up one line
+;
+(defun scroll-up-one ()
+  (interactive)
+  (scroll-down 1))
+;;make it so I can browse .tar & .tar.gz files
+(load "jka-compr")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;setup autoloading stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;cwebmode stuff
+(autoload 'cweb-mode "cweb-mode" nil t)
+;fvwm-mode stuff
+(autoload 'fvwm-mode "fvwmmode" nil t)
+;zephyr-locate stuff
+(autoload 'zephyr-locate "zephyrloc" "Locates zephyr users in your .znolint file" t)
+;zwrite stuff
+(autoload 'zephyr-mode "zwrite" "A major-mode to send zephyr-grams to people
+Type your zephyr message, press C-c C-c to send" t)
+(autoload 'zwrite "zwrite" "Send a zephyr-gram to somebody" t)
+(setq zephyr-completion-alist '(("drew") ("cammy") ("doleh") ("vmuslin") ("lucien")
+				("cknapo") ("tmoir") ("adaniels") ("ben") ("buzz") 
+				("cwist")))
+(autoload 'nslookup "nslookup" nil t)
+;cvs stuff
+(autoload 'cvs-update "pcl-cvs" nil t)
+;m4 stuff
+(autoload 'm4-mode "m4-mode" nil t)
+;python mode
+(autoload 'python-mode "python-mode" "Python editing mode." t)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;setup CVS stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq cvs-inhibit-copyright-message t)
+(setq cvs-erase-input-buffer t)
+(setq cvs-auto-revert-after-commit t)
+(setq cvs-program "/usr/local/bin/cvs")
+
+;
+;stuff for emacs-20
+;
+(setq default-frame-alist
+      (cons '(vertical-scroll-bars . right) default-frame-alist))
+;
+; Local-map key bindings
+;
+;
+; C mode
+;
+;
+;setup C indentation stuff
+;
+(defun my-c-mode-common-hook ()
+	(setq-default c-basic-offset 2)
+	(c-set-offset 'substatement-open 0)
+	(c-set-offset 'case-label '+)
+	(c-set-offset 'statement-case-open 0)
+	(setq indent-tabs-mode nil))
+(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
+;
+; Text mode
+;
+(setq text-mode-hook 'turn-on-auto-fill)
+;
+; Other
+;
+(put 'eval-expression 'disabled nil)
+(setq auto-mode-alist (cons '("\.sqC$" . c++-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\.hpp$" . c++-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\.cpp$" . c++-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\.java" . java-mode) auto-mode-alist))
+(set-cursor-color "yellow")
+;;;;;;;;;;;;;;;;;;;;;;;;
+;setup buffer-bar stuff
+;;;;;;;;;;;;;;;;;;;;;;;;
+(setq line-number-mode 1)      ;add line # to mode line
+(column-number-mode 1)         ;add col # to mode line
+(display-time)                 ;have it display time 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;so emacs pops up and goes away when we want
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;(auto-raise-mode 1)
+;(auto-lower-mode 1)
+
+
+
+;
+; Variables
+;
+(setq-default case-fold-search nil)
+(setq-default case-replace nil)
+;(setq-default tab-width 2)
+;
+; Global-map key bindings
+;
+;	forms "global-set-key" and "define-key global-map" are equivalent
+;	forms "define-key ctl-x-map" and "define-key global-map \C-" are equivalent
+;
+(global-set-key "\C-j" 'bookmark-jump)				;setup jump to bookmarks
+(global-set-key "\M-\C-l" 'font-lock-fontify-buffer)		;setup for recoloring buffer
+(global-set-key "\M-\C-u" 'cvs-update)				;setup for cvs-updating stuff
+(global-set-key "\C-h" 'backward-delete-char)			; Backspace (C-h) = delete (redefines help-command)
+;(global-set-key "\C- " 'set-mark-command)			; C-space = set mark at the cursor
+(define-key global-map "\C-x?" 'help-command)			; C-x ? = invoke help
+(define-key global-map "\C-z" 'scroll-down-one)			; C-z   = scroll down one line (redefines suspend-emacs, use C-x C-z)
+(define-key global-map "\ej" 'lisp-fill-paragraph)		; E-j   = fill paragraph (redefines indent-new-comment-line)
+(define-key global-map "\ez" 'scroll-up-one)   			; E-z   = scroll up one line (redefines zap-to-char)
+(define-key ctl-x-map "l" 'goto-line)				; C-x l = goto specific line #
+(define-key ctl-x-map "c" 'compile)				; C-x c = run make -k
+(define-key ctl-x-map "'" 'next-error)				; C-x c = move cursor to the next compilation error
+;
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+; Drew's init stuff...
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Setup macros for Emacs-19.29
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;for when I run GNUS (very rarely)
+;(setq gnus-select-method '(nntp "piranha"))
+
+;;to make tabs insert spaces?
+(setq-default indent-tabs-mode nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;setup font-lock-stuff
+;;;;;;;;;;;;;;;;;;;;;;;
+(cond (window-system
+       (load "font-lock")
+       (setq font-lock-support-mode 'lazy-lock-mode)
+;commented out for em20
+;       (font-lock-make-faces)
+       (setq font-lock-maximum-decoration 3)
+       (set-face-foreground 'font-lock-comment-face "red")
+       (set-face-foreground 'font-lock-string-face "white")
+       (set-face-foreground 'font-lock-keyword-face "cyan")
+       (set-face-foreground 'font-lock-reference-face "green")
+       (set-face-foreground 'font-lock-variable-name-face "lightgoldenrod")
+       (set-face-foreground 'font-lock-type-face "yellow")
+       (set-face-foreground 'font-lock-function-name-face "green")
+       ;face for makefile-tab
+;       (make-face 'makefile-tab-face)
+;       (set-face-background 'makefile-tab-face "midnightblue")
+       (set-background-color "midnightblue")
+       (set-foreground-color "white")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;setup c keywords and hooks for font-lock
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+       (setq c-font-lock-keywords c-font-lock-keywords-2)
+       (setq c++-font-lock-keywords c-font-lock-keywords-2)
+       (setq java-font-lock-keywords java-font-lock-keywords-2)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;add font-lock to these modes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+       (add-hook 'emacs-lisp-mode-hook 'font-lock-mode)
+       (add-hook 'c++-mode-hook 'font-lock-mode)
+       (add-hook 'c-mode-hook 'font-lock-mode)
+       (add-hook 'java-mode-hook 'font-lock-mode)
+       (add-hook 'texinfo-mode-hook 'font-lock-mode)
+       (add-hook 'makefile-mode-hook 'font-lock-mode)
+       (add-hook 'fvwm-mode-hook 'font-lock-mode)
+       (add-hook 'sh-mode-hook 'font-lock-mode)
+       (add-hook 'mail-mode-hook 'font-lock-mode)
+       (add-hook 'rmail-mode-hook 'font-lock-mode)
+       (add-hook 'zephyr-mode-hook 'font-lock-mode)
+       (add-hook 'nroff-mode-hook 'font-lock-mode)
+       (add-hook 'm4-mode-hook 'font-lock-mode)
+       (add-hook 'perl-mode-hook 'font-lock-mode)
+       (add-hook 'python-mode-hook 'font-lock-mode)
+       (add-hook 'outline-mode-hook 'font-lock-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;setup compiles to run in a separate frame
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;       (setq special-display-buffer-names '("*compilation*", "*tex-shell*"))
+;       (setq special-display-frame-alist '((user-position . t) 
+;					   (left . 273) 
+;					   (top . 3) 
+;					   (height . 20) 
+;					   (width . 89)))
+       ))
+;;end (cond (window-system))
+
+(add-hook 'texinfo-mode-hook 'auto-fill-mode)
+(add-hook 'mail-mode-hook 'auto-fill-mode)
+(setq auto-mode-alist 
+      (cons '("[Mm]akefile$" . makefile-mode) 
+	    (cons '("\.fvwmrc$" . fvwm-mode) 
+		  (cons '(".*\.hpp$" . c++-mode) 
+			(cons '(".*\.ipp$" . c++-mode)
+			      (cons '(".*\\\.m4$" . m4-mode)
+				    (cons '("\\.py$" . python-mode)
+					  auto-mode-alist)))))))
+
+(setq auto-mode-alist
+      (cons '(".*\.m4cpp$" . c++-mode)
+	    (cons '(".*\.m4hpp$" . c++-mode)
+        	    (cons '(".*\.java$" . java-mode)
+        		  auto-mode-alist))))
+
+(setq ps-lpr-command "/usr/local/bin/lpr")
+(setq tex-alt-dvi-print-command "/usr/local/bin/lpr")
+;(lpr-command)
+;;;;;;;;;;;;;;;;;;;;;;;
+;restore desktop state
+;;;;;;;;;;;;;;;;;;;;;;;
+(load "desktop")
+(desktop-load-default)
+(desktop-read)
+
+(put 'narrow-to-region 'disabled nil)
+
+;(load "gnuserv")
+;(gnuserv-start)
+;(setq gnuserv-frame (selected-frame))

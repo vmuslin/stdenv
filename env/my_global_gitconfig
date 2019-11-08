@@ -1,0 +1,8 @@
+[user]
+	name = Victor Muslin
+	email = vm202@columbia.edu
+[alias]
+	show-graph = log --graph --abbrev-commit --pretty=oneline
+	graph = log --all --decorate --oneline --graph
+[core]
+	excludesfile = ~/.gitignore
