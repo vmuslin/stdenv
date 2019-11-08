@@ -1,13 +1,18 @@
 #!/bin/bash
 #
-# This script sets up my login environment.
+# This script automates the set up my login environment. To reverse
+# the changes run restore_stdenv.sh script.
+#
+# NOTE: The script and the environment depends on having a directory
+#       (or a directory symlink) ~/top. This link may need to set up
+#       manually before running this script.
 #
 # The standard environment requires the following directory structure
 # under the home directory on any given host:
 #
 #  ~  (home directory on a given host)
 #  |
-#  +-- top  <-- ~/top
+#  +-- top  <-- ~/top (this may need to be set manually)
 #      |
 #      +-- stdenv
 #      |   |
@@ -26,21 +31,6 @@
 # Host-specific configuration is specified using script
 # ../stdenv/hostenv/hostenv_$(uname -n).sh.
 #
-# It is expected by this script that the following environment
-# variables are set properly:
-#
-#    VictorDir - provides a path to the directory containing
-#                all of my files
-#
-#    DropboxDir - if exists, provides a path to the root of the
-#                 directory tree replicated by Dropbox. If it
-#                 does not exist, then Dropbox is not used for
-#                 replication.
-#
-
-# Require basic directory structure:
-#
-#    ~/top and ~/stdenv
 
 #-------------------------------------------------------------------------------
 # Validate prerequisites to building the standard environment
